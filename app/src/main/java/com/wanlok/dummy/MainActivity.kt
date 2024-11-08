@@ -4,20 +4,30 @@ import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
 import androidx.activity.enableEdgeToEdge
+import androidx.activity.result.ActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 
 
 class MainActivity : AppCompatActivity() {
-    val tag: String = "MainActivity"
+    private val tag: String = "MainActivity"
     lateinit var shareButton: Button
+
+    private val launcher = registerForActivityResult(
+        ActivityResultContracts.StartActivityForResult()
+    ) { result: ActivityResult ->
+        if (result.resultCode == RESULT_OK) {
+            // Copy button click
+        }
+    }
 
     fun share(text: String) {
         val intent = Intent(Intent.ACTION_SEND)
         intent.setType("text/plain")
         intent.putExtra(Intent.EXTRA_TEXT, text)
-        startActivity(Intent.createChooser(intent, null))
+        launcher.launch(Intent.createChooser(intent, null))
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
